@@ -40,7 +40,6 @@ def get_spotify_link():
         playlistLink = input("Please enter a spotify playlist link: ")
         return playlistLink
         
-
 # Extracts the spotify playlist ID from playlist link.
 def get_playlistId(playlistLink):
 
@@ -66,11 +65,16 @@ def trackDetails(token, playlistId):
 def get_YT_Link(trackInfo):
     ytSongURL = []
     for i in trackInfo:
-        search = (VideosSearch(i, limit=1)).result()
-        ytSongURL.append(search['result'][0]['link'])
+    
+        searchResults = VideosSearch(i, limit=1).result().get("result",[])
+        if searchResults:
+            ytSongURL.append(searchResults[0].get('link'))
+        else:
+            print(f"no result found for {i}")
     return ytSongURL
 
 def download_From_YT(ytSongURL):
+    notFound = 0
     for i in ytSongURL:
         yt = YouTube(i)
     
@@ -80,16 +84,19 @@ def download_From_YT(ytSongURL):
             yt.streams.get_audio_only().download('wavDownloads', filename)
         except Exception as e:
             print(f"Error retrieving title for video {i}:{str(e)}")
+            notFound += 1
+    return f"could not find {notFound} out of {len(ytSongURL)}"   
+        
+        
     
-
-
 def main():
     token = get_token()
     playlistLink = get_spotify_link()
     playlistId = get_playlistId(playlistLink)
     trackInfo = trackDetails(token, playlistId)
     ytSongURL = get_YT_Link(trackInfo)
-    download_From_YT(ytSongURL)
+    print(download_From_YT(ytSongURL))
+    
 
     
 if __name__ == "__main__":
