@@ -85,7 +85,7 @@ def download_From_YT(ytSongURL):
         except Exception as e:
             print(f"Error retrieving title for video {i}:{str(e)}")
             notFound += 1
-    return f"could not find {notFound} out of {len(ytSongURL)}"   
+    return f"pytube could not download {notFound} out of {len(ytSongURL)}"   
         
         
     
