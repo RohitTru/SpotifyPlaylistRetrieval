@@ -42,17 +42,33 @@ def get_spotify_link():
         
 
 # Extracts the spotify playlist ID from playlist link.
-def get_playlistId(token, playlistLink):
-    # giving access to spotipy
-    sp = spotipy.Spotify(auth=token)
-       
+def get_playlistId(playlistLink):
+
     # retrieve id from link
     playlistId = playlistLink.split('/')[-1].split('?')[0]
     return playlistId
 
+def trackDetails(token, playlistId):
+    sp = spotipy.Spotify(auth=token)
+     
+    playlistTracks = []
+    trackInfo = sp.playlist_tracks(playlistId)
+    playlistTracks += trackInfo['items']
+    while trackInfo['next']:
+        trackInfo = sp.next(trackInfo)
+        playlistTracks += trackInfo['items']
+    
+    trackInfo = []
+    for track in playlistTracks:
+        trackInfo.append(track['track']['name'] + track['track']['artists'][0]['name'] + ' audio')
+    return trackInfo
 
+def main():
+    token = get_token()
+    playlistLink = get_spotify_link()
+    playlistId = get_playlistId(playlistLink)
+    trackInfo = trackDetails(token, playlistId)
 
-token = get_token()
-
-print(get_playlistId(token, get_spotify_link()))
-
+    
+if __name__ == "__main__":
+    main()
