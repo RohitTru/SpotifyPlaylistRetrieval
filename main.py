@@ -35,4 +35,24 @@ def get_token():
 def get_auth_header(token):
     return{"Authorization": "Bearer " + token}
 
+# Retrieves the spotify playlist from user
+def get_spotify_link():
+        playlistLink = input("Please enter a spotify playlist link: ")
+        return playlistLink
+        
+
+# Extracts the spotify playlist ID from playlist link.
+def get_playlistId(token, playlistLink):
+    # giving access to spotipy
+    sp = spotipy.Spotify(auth=token)
+       
+    # retrieve id from link
+    playlistId = playlistLink.split('/')[-1].split('?')[0]
+    return playlistId
+
+
+
 token = get_token()
+
+print(get_playlistId(token, get_spotify_link()))
+
