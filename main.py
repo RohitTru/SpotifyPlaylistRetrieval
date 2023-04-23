@@ -31,4 +31,8 @@ def get_token():
     token = json_result["access_token"]
     return token
 
+# Anytime we make api calls
+def get_auth_header(token):
+    return{"Authorization": "Bearer " + token}
+
 token = get_token()
