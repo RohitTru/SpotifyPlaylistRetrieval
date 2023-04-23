@@ -70,13 +70,26 @@ def get_YT_Link(trackInfo):
         ytSongURL.append(search['result'][0]['link'])
     return ytSongURL
 
+def download_From_YT(ytSongURL):
+    for i in ytSongURL:
+        yt = YouTube(i)
+    
+        try: # Error handling incase of retrieval errors by pytube
+            title = yt.title
+            filename = title + '.wav'
+            yt.streams.get_audio_only().download('wavDownloads', filename)
+        except Exception as e:
+            print(f"Error retrieving title for video {i}:{str(e)}")
+    
+
+
 def main():
     token = get_token()
     playlistLink = get_spotify_link()
     playlistId = get_playlistId(playlistLink)
     trackInfo = trackDetails(token, playlistId)
     ytSongURL = get_YT_Link(trackInfo)
-    print(ytSongURL)
+    download_From_YT(ytSongURL)
 
     
 if __name__ == "__main__":
