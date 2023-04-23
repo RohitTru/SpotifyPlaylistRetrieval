@@ -63,11 +63,20 @@ def trackDetails(token, playlistId):
         trackInfo.append(track['track']['name'] + track['track']['artists'][0]['name'] + ' audio')
     return trackInfo
 
+def get_YT_Link(trackInfo):
+    ytSongURL = []
+    for i in trackInfo:
+        search = (VideosSearch(i, limit=1)).result()
+        ytSongURL.append(search['result'][0]['link'])
+    return ytSongURL
+
 def main():
     token = get_token()
     playlistLink = get_spotify_link()
     playlistId = get_playlistId(playlistLink)
     trackInfo = trackDetails(token, playlistId)
+    ytSongURL = get_YT_Link(trackInfo)
+    print(ytSongURL)
 
     
 if __name__ == "__main__":
